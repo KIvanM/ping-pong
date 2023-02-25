@@ -5,7 +5,6 @@ win_width = 700
 win_height = 500
 window = display.set_mode((win_width, win_height))
 
-
 clock = time.Clock()
 FPS = 60
 game = True
@@ -40,6 +39,11 @@ racket = Player("racket.png", 650, 250, 10)
 racket1 = Player("racket.png", 0, 250, 10)
 tenis = GameSprite("tenis_ball.png", 350, 250, 6)
 
+font.init()
+font1 = font.Font(None, 35)
+lose1 = font1.render("PLAYER 1 LOSE!", True, (180, 0, 0))
+lose2 = font1.render("PLAYER 2 LOSE!", True, (180, 0, 0))
+
 finish = False
 speed_x = 3
 speed_y = 3
@@ -48,6 +52,15 @@ while game:
     for e in event.get():
         if e.type == QUIT:
             game = False
+
+    if tenis.rect.x < 0:
+        finish = True
+        window.blit(lose1, (250, 230))
+
+    if tenis.rect.x > win_width - 50:
+        finish = True
+        window.blit(lose2, (250, 230))
+
     if finish != True:
         window.fill(back)
         racket.update1()
@@ -61,15 +74,9 @@ while game:
         if sprite.collide_rect(racket, tenis) or sprite.collide_rect(racket1, tenis):
             speed_x *= -1
 
-
-
-
-        
         racket.reset()
         racket1.reset()
         tenis.reset()
-
-
 
     display.update()
     clock.tick(FPS)
